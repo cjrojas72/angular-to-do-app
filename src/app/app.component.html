@@ -28,18 +28,17 @@
         </div>
         <div class="row pt-2">
             <div class="col-12">
-                <button class="btn btn-secondary">Show All</button>
-                <button class="btn btn-secondary">Show Completed</button>
-                <button class="btn btn-secondary">Show On Hold</button>
-                <button class="btn btn-secondary">Show In-Progress</button>
+                <button class="btn" [ngClass]="filterType=='all' ? 'btn-primary':'btn-secondary'" (click)="setFilter('all')">Show All</button>
+                <button class="btn" [ngClass]="filterType=='completed' ? 'btn-primary':'btn-secondary'" (click)="setFilter('completed')">Show Completed</button>
+                <button class="btn" [ngClass]="filterType=='in-progress' ? 'btn-primary':'btn-secondary'" (click)="setFilter('in-progress')">Show In-Progress</button>
             </div> 
         </div>
         <div class="row pt-2">
             <div class="col-12">
-                <button class="btn btn-primary btn-sm">All Tags</button>
-                <button class="btn btn-danger btn-sm">Health</button>
-                <button class="btn btn-secondary btn-sm">Office</button>
-                <button class="btn btn-secondary btn-sm">Motivation</button>
+                <button [ngClass]="isShowAllTags ?  'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary' " (click)="toggleShowAllTags()">Show All</button>
+                <button class="btn btn-secondary btn-sm" *ngFor="let tag of tagsList" >{{ tag }}</button>
+                <!-- <button class="btn btn-secondary btn-sm">Office</button>
+                <button class="btn btn-secondary btn-sm">Motivation</button> -->
             </div> 
         </div>
 
@@ -60,7 +59,7 @@
                           <td>
                               <div class="row">
                                   <div class="col-1">
-                                      <input type="checkbox">
+                                      <input (change)="onTaskComplete()" [(ngModel)]="task.isCompleted" type="checkbox">
                                   </div>
                                   <div class="col-6">
                                       {{ task.taskName }}
@@ -72,9 +71,12 @@
                           </td>
                           <td> {{ task.dueDate | date: 'dd-MM-yy' }}</td>
                           <td class="text-center">
-                              <button class="btn btn-warning btn-sm rounded-btn">Health</button>
-                              <button class="btn btn-secondary btn-sm rounded-btn">fitness</button>
-                              <button class="btn btn-success btn-sm rounded-btn">default</button>
+                              <button class="btn btn-warning btn-sm rounded-btn" *ngFor="let tag of getCommaSeperatedValues(task.tags)">{{ tag }}</button>
+                              <!-- <button class="btn btn-secondary btn-sm rounded-btn">fitness</button>
+                              <button class="btn btn-success btn-sm rounded-btn">default</button> -->
+                          </td>
+                          <td class="text-center">
+                            <button (click)="onRemove(sr)" class="btn btn-danger btn-sm">Delete</button>
                           </td>
                       </tr>
                   </tbody>
