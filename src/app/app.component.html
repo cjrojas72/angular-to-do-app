@@ -28,19 +28,33 @@
         </div>
         <div class="row pt-2">
             <div class="col-12">
-                <button class="btn" [ngClass]="filterType=='all' ? 'btn-primary':'btn-secondary'" (click)="setFilter('all')">Show All</button>
-                <button class="btn" [ngClass]="filterType=='completed' ? 'btn-primary':'btn-secondary'" (click)="setFilter('completed')">Show Completed</button>
-                <button class="btn" [ngClass]="filterType=='in-progress' ? 'btn-primary':'btn-secondary'" (click)="setFilter('in-progress')">Show In-Progress</button>
+                <button class="btn" [ngClass]="filterType=='all' ? 'btn-primary disabled':'btn-secondary'" (click)="setFilter('all')">Show All</button>
+                <button class="btn" [ngClass]="filterType=='completed' ? 'btn-primary disabled':'btn-secondary'" (click)="setFilter('completed')">Show Completed</button>
+                <button class="btn" [ngClass]="filterType=='in-progress' ? 'btn-primary disabled':'btn-secondary'" (click)="setFilter('in-progress')">Show In-Progress</button>
             </div> 
         </div>
         <div class="row pt-2">
             <div class="col-12">
-                <button [ngClass]="isShowAllTags ?  'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary' " (click)="toggleShowAllTags()">Show All</button>
-                <button class="btn btn-secondary btn-sm" *ngFor="let tag of tagsList" >{{ tag }}</button>
+                <!-- <button [ngClass]="isShowAllTags ?  'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary' " (click)="toggleShowAllTags()">Show All</button>
+                <button class="btn btn-secondary btn-sm" *ngFor="let tag of tagsList" >{{ tag }}</button> -->
+                <div style="display: flex;">
+                    <div>
+                        <button class="btn btn-sm" [ngClass]="selectedTag == 'all'? 'btn-primary': 'btn-secondary'" (click)="setTagFilter('all')">All</button> 
+                    </div>
+                    <div *ngFor="let tag of tagsList">
+                        <button class="btn btn-sm" [ngClass]="selectedTag == tag? 'btn-primary': 'btn-secondary'" (click)="setTagFilter(tag)">{{ tag }}</button>
+                    </div>
+                </div>
+                
                 <!-- <button class="btn btn-secondary btn-sm">Office</button>
                 <button class="btn btn-secondary btn-sm">Motivation</button> -->
             </div> 
         </div>
+
+        <div class="col-12 mt-5">
+            <h4>Showing all tasks with tag " {{ selectedTag }} "</h4>
+        </div>
+
 
         <div class="row pt-3">
           <div class="col-12">

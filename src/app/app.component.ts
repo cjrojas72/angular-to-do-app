@@ -17,10 +17,13 @@ import { CommonModule } from '@angular/common';
 export class AppComponent {
   title = 'angular-to-do-app';
   taskList: Task[] = [];
-  tagsList: string[] = ['Work', 'Health', 'Fitness'];
+  tagsList: string[] = [];
+  originalTaskList: Task[] = [];
+  filteredTaskList: Task[] = [];
 
   isShowAllTags: boolean = true;
   filterType: string = 'all';
+  selectedTag: string = 'all';
 
   taskObj: Task;
   jsonData: any;
@@ -31,6 +34,7 @@ export class AppComponent {
 
     if(localData){
       this.taskList = JSON.parse(localData);
+      this.originalTaskList = this.taskList;
     }
   }
 
@@ -40,9 +44,14 @@ export class AppComponent {
     const parseTask = JSON.parse(task);
 
     this.taskList.push(parseTask);
+    this.originalTaskList = this.taskList;
+    this.updateTagsList(parseTask.tags);
     const uTaskList = JSON.stringify(this.taskList);
 
+
+
     localStorage.setItem('ToDoApp', uTaskList);
+    this.originalTaskList = this.taskList;
   }
 
   onTaskComplete(){
@@ -50,12 +59,14 @@ export class AppComponent {
     const updatedTaskList = this.taskList;
     
     localStorage.setItem('ToDoApp', JSON.stringify(updatedTaskList));
+    this.originalTaskList = this.taskList;
   }
 
   onRemove(index: number){
     //debugger
     const updatedTaskList = this.taskList.splice(index, 1);
     localStorage.setItem('ToDoApp', JSON.stringify(updatedTaskList));
+    this.originalTaskList = this.taskList;
   }
 
   getCommaSeperatedValues(value: string): string[]{
@@ -69,6 +80,42 @@ export class AppComponent {
 
   setFilter(value: string){
     this.filterType = value;
+
+
+    if(this.filterType == 'all'){
+      this.taskList = this.originalTaskList;
+    }
+    else if(this.filterType == 'completed'){
+      
+      this.taskList = this.originalTaskList;
+      this.filteredTaskList = this.taskList.filter((task) => task.isCompleted === true);
+      this.taskList = this.filteredTaskList;
+    }
+    else if(this.filterType == 'in-progress'){
+
+      
+      this.taskList = this.originalTaskList;
+      this.filteredTaskList = this.taskList.filter((task) => task.isCompleted === false);
+      this.taskList = this.filteredTaskList;
+    }
+    else{
+      return;
+    }
+
+
+  }
+
+  setTagFilter(value: string){
+    this.selectedTag = value;
+  }
+
+  updateTagsList(value:string){
+    //console.log(tags);
+    let tlist: string[] = this.getCommaSeperatedValues(value);
+    tlist.forEach( tag => {
+      this.tagsList.push(tag);
+    })
+
   }
 
 
